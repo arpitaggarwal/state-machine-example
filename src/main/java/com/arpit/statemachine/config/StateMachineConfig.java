@@ -1,9 +1,13 @@
 package com.arpit.statemachine.config;
 
+import com.arpit.statemachine.actions.ActionS1;
+import com.arpit.statemachine.actions.ActionS2;
 import com.arpit.statemachine.events.Events;
 import com.arpit.statemachine.states.States;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.statemachine.StateContext;
+import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
@@ -36,6 +40,37 @@ public class StateMachineConfig
                 .withStates()
                 .initial(States.SI)
                 .states(EnumSet.allOf(States.class));
+
+        /*states
+                .withStates()
+                .initial(States.S1)
+                .state(States.S1)
+                .and()
+                .withStates()
+                .parent(States.S1)
+                .initial(States.S2)
+                .state(States.S2).end(States.END)
+                .and()
+                .withStates()
+                .parent(States.S1)
+                .initial(States.S3)
+                .state(States.S3).end(States.END);*/
+
+      /*  states
+                .withStates()
+                .initial(States.S1, actionS1())
+                .state(States.S1)
+                .and()
+                .withStates()
+                .parent(States.S1)
+                .initial(States.S2)
+                .state(States.S2)
+                .and()
+                .withStates()
+                .parent(States.S2)
+                .initial(States.S3)
+                .state(States.S3)
+                .end(States.END);*/
     }
 
     @Override
@@ -43,12 +78,26 @@ public class StateMachineConfig
             throws Exception {
         transitions
                 .withExternal()
-                .source(States.SI).target(States.S1).event(Events.E1)
+                .source(States.SI).target(States.S2).event(Events.E1)
+                .action(actionS1())
                 .and()
                 .withExternal()
-                .source(States.S1).target(States.S2).event(Events.E2);
+                .source(States.S2).target(States.S1).action(actionS2())
+              /*  .and()
+                .withExternal()
+                .source(States.S2).target(States.S3).action(actionS2())*/
+        ;
     }
 
+    @Bean
+    public Action<States, Events> actionS1() {
+        return new ActionS1();
+    }
+
+    @Bean
+    public Action<States, Events> actionS2() {
+        return new ActionS2();
+    }
     @Bean
     public StateMachineListener<States, Events> listener() {
         return new StateMachineListenerAdapter<States, Events>() {
