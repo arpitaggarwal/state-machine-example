@@ -2,6 +2,7 @@ package com.arpit.statemachine.config;
 
 import com.arpit.statemachine.actions.ActionS1;
 import com.arpit.statemachine.actions.ActionS2;
+import com.arpit.statemachine.actions.ActionS3;
 import com.arpit.statemachine.events.Events;
 import com.arpit.statemachine.states.States;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +18,8 @@ import org.springframework.statemachine.listener.StateMachineListener;
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
 
-import java.util.EnumSet;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @EnableStateMachine
@@ -36,41 +38,41 @@ public class StateMachineConfig
     @Override
     public void configure(StateMachineStateConfigurer<States, Events> states)
             throws Exception {
-        states
-                .withStates()
-                .initial(States.SI)
-                .states(EnumSet.allOf(States.class));
 
-        /*states
-                .withStates()
-                .initial(States.S1)
-                .state(States.S1)
-                .and()
-                .withStates()
-                .parent(States.S1)
-                .initial(States.S2)
-                .state(States.S2).end(States.END)
-                .and()
-                .withStates()
-                .parent(States.S1)
-                .initial(States.S3)
-                .state(States.S3).end(States.END);*/
-
+        // Single State Change
       /*  states
                 .withStates()
-                .initial(States.S1, actionS1())
-                .state(States.S1)
+                .initial(States.IDLE)
+                .end(States.END)
+                .states(EnumSet.allOf(States.class));*/
+
+      // Hierarchical States - Only last action executes.
+      /*  states
+                .withStates()
+                .initial(States.S1)
+                .state(States.S1, actionS1())
                 .and()
                 .withStates()
-                .parent(States.S1)
-                .initial(States.S2)
-                .state(States.S2)
-                .and()
+                    .parent(States.S1)
+                    .initial(States.S2)
+                    .state(States.S2, actionS2())
+                    .and()
+                    .withStates()
+                        .parent(States.S2)
+                        .initial(States.S3)
+                        .state(States.S3 , actionS3())
+                        .end(States.END);*/
+        List S2Actions= new ArrayList<>();
+        S2Actions.add(actionS1());
+        S2Actions.add(actionS2());
+        S2Actions.add(initialize());
+        states
                 .withStates()
-                .parent(States.S2)
-                .initial(States.S3)
-                .state(States.S3)
-                .end(States.END);*/
+                .initial(States.IDLE)
+                .state(States.S1, actionS1())
+                .state(States.S2, S2Actions)
+                .state(States.S3, actionS3());
+        ;
     }
 
     @Override
@@ -78,14 +80,13 @@ public class StateMachineConfig
             throws Exception {
         transitions
                 .withExternal()
-                .source(States.SI).target(States.S2).event(Events.E1)
-                .action(actionS1())
+                .source(States.IDLE).target(States.S1).event(Events.INITIALIZE).action(initialize())
                 .and()
                 .withExternal()
-                .source(States.S2).target(States.S1).action(actionS2())
-              /*  .and()
+                .source(States.S1).target(States.S2).event(Events.E1)
+                .and()
                 .withExternal()
-                .source(States.S2).target(States.S3).action(actionS2())*/
+                .source(States.S2).target(States.S3).event(Events.E2)
         ;
     }
 
@@ -95,8 +96,24 @@ public class StateMachineConfig
     }
 
     @Bean
+    public Action<States, Events> initialize() {
+        return new Action<States, Events>() {
+
+            @Override
+            public void execute(StateContext<States, Events> context) {
+                System.out.println("initialize.....");
+            }
+        };
+    }
+
+    @Bean
     public Action<States, Events> actionS2() {
         return new ActionS2();
+    }
+
+    @Bean
+    public Action<States, Events> actionS3() {
+        return new ActionS3();
     }
     @Bean
     public StateMachineListener<States, Events> listener() {
