@@ -72,7 +72,6 @@ public class StateMachineConfig
                 .state(States.S1, actionS1())
                 .state(States.S2, S2Actions)
                 .state(States.S3, actionS3());
-        ;
     }
 
     @Override
