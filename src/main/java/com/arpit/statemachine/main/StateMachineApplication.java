@@ -20,10 +20,10 @@ public class StateMachineApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         stateMachine.sendEvent(Events.INITIALIZE);
-        System.out.println("############################################1111111111111111111111111");
-        stateMachine.sendEvent(Events.E1);
+       /* System.out.println("############################################1111111111111111111111111");
+        stateMachine.sendEvent(Events.ORDERED);
         System.out.println("############################################");
-        stateMachine.sendEvent(Events.E2);
+        stateMachine.sendEvent(Events.SHIPPED);*/
        /*
 
         stateMachine.sendEvent(Events.E1);*/

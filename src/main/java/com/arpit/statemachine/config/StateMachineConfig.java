@@ -1,8 +1,8 @@
 package com.arpit.statemachine.config;
 
-import com.arpit.statemachine.actions.ActionS1;
-import com.arpit.statemachine.actions.ActionS2;
-import com.arpit.statemachine.actions.ActionS3;
+import com.arpit.statemachine.actions.DeliveredAction;
+import com.arpit.statemachine.actions.OrderedAction;
+import com.arpit.statemachine.actions.ShippedAction;
 import com.arpit.statemachine.events.Events;
 import com.arpit.statemachine.states.States;
 import org.springframework.context.annotation.Bean;
@@ -17,9 +17,6 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 import org.springframework.statemachine.listener.StateMachineListener;
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 @EnableStateMachine
@@ -46,7 +43,7 @@ public class StateMachineConfig
                 .end(States.END)
                 .states(EnumSet.allOf(States.class));*/
 
-      // Hierarchical States - Only last action executes.
+        // Hierarchical States - Only last action executes.
       /*  states
                 .withStates()
                 .initial(States.S1)
@@ -62,16 +59,12 @@ public class StateMachineConfig
                         .initial(States.S3)
                         .state(States.S3 , actionS3())
                         .end(States.END);*/
-        List S2Actions= new ArrayList<>();
-        S2Actions.add(actionS1());
-        S2Actions.add(actionS2());
-        S2Actions.add(initialize());
         states
                 .withStates()
                 .initial(States.IDLE)
-                .state(States.S1, actionS1())
-                .state(States.S2, S2Actions)
-                .state(States.S3, actionS3());
+                .state(States.ORDERED, orderedAction())
+                .state(States.SHIPPED, shippedAction())
+                .state(States.DELIVERED, deliveredAction());
     }
 
     @Override
@@ -79,19 +72,19 @@ public class StateMachineConfig
             throws Exception {
         transitions
                 .withExternal()
-                .source(States.IDLE).target(States.S1).event(Events.INITIALIZE).action(initialize())
+                .source(States.IDLE).target(States.ORDERED).event(Events.INITIALIZE).action(initialize())
                 .and()
                 .withExternal()
-                .source(States.S1).target(States.S2).event(Events.E1)
+                .source(States.ORDERED).target(States.SHIPPED).event(Events.SHIPPED)
                 .and()
                 .withExternal()
-                .source(States.S2).target(States.S3).event(Events.E2)
+                .source(States.SHIPPED).target(States.DELIVERED).event(Events.DELIVERED)
         ;
     }
 
     @Bean
-    public Action<States, Events> actionS1() {
-        return new ActionS1();
+    public Action<States, Events> orderedAction() {
+        return new OrderedAction();
     }
 
     @Bean
@@ -106,14 +99,15 @@ public class StateMachineConfig
     }
 
     @Bean
-    public Action<States, Events> actionS2() {
-        return new ActionS2();
+    public Action<States, Events> shippedAction() {
+        return new ShippedAction();
     }
 
     @Bean
-    public Action<States, Events> actionS3() {
-        return new ActionS3();
+    public Action<States, Events> deliveredAction() {
+        return new DeliveredAction();
     }
+
     @Bean
     public StateMachineListener<States, Events> listener() {
         return new StateMachineListenerAdapter<States, Events>() {
