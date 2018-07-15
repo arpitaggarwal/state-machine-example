@@ -12,6 +12,10 @@ public class ShippedAction implements Action<States, Events> {
 
     @Override
     public void execute(StateContext<States, Events> context) {
+
+      /*  String str=null;
+        str.equals("hello");
+*/
         System.out.println("Shipped Action called....");
         if (context.getMessage().getHeaders() != null) {
             Order order = (Order) context.getMessage().getHeaders().get("order");

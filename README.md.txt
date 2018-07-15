@@ -1,0 +1,1 @@
+https://stackoverflow.com/questions/32994678/how-to-construct-state-machine-in-a-particular-state

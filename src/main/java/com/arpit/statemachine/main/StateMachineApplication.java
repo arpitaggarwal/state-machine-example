@@ -1,6 +1,7 @@
 package com.arpit.statemachine.main;
 
 import com.arpit.statemachine.events.Events;
+import com.arpit.statemachine.interceptors.StateInterceptor;
 import com.arpit.statemachine.states.States;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -19,7 +20,8 @@ public class StateMachineApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        stateMachine.sendEvent(Events.INITIALIZE);
+        stateMachine.getStateMachineAccessor().withRegion().addStateMachineInterceptor(new StateInterceptor());
+        stateMachine.sendEvent(Events.ORDERED);
        /* System.out.println("############################################1111111111111111111111111");
         stateMachine.sendEvent(Events.ORDERED);
         System.out.println("############################################");

@@ -17,6 +17,7 @@ public class OrderedAction implements Action<States, Events> {
                 .withPayload(Events.SHIPPED)
                 .setHeader("order", new Order(1))
                 .build();
+        System.out.println("Order placed and id is :: " + 1);
         context.getStateMachine().sendEvent(message);
     }
 }

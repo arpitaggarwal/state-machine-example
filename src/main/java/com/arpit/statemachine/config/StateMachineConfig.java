@@ -8,6 +8,7 @@ import com.arpit.statemachine.states.States;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.StateContext;
+import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;
@@ -72,7 +73,7 @@ public class StateMachineConfig
             throws Exception {
         transitions
                 .withExternal()
-                .source(States.IDLE).target(States.ORDERED).event(Events.INITIALIZE).action(initialize())
+                .source(States.IDLE).target(States.ORDERED).event(Events.ORDERED)
                 .and()
                 .withExternal()
                 .source(States.ORDERED).target(States.SHIPPED).event(Events.SHIPPED)
@@ -109,12 +110,24 @@ public class StateMachineConfig
     }
 
     @Bean
+    public Action<States, Events> errorAction() {
+        return ctx -> System.out.println(
+                "Error " + ctx.getSource().getId() + ctx.getException());
+    }
+
+    @Bean
     public StateMachineListener<States, Events> listener() {
         return new StateMachineListenerAdapter<States, Events>() {
             @Override
             public void stateChanged(State<States, Events> from, State<States, Events> to) {
                 System.out.println("State change to " + to.getId());
             }
+
+            @Override
+            public void stateMachineError(StateMachine<States, Events> stateMachine, Exception exception) {
+                System.out.println("State Machine Error");
+            }
+
         };
     }
 }
