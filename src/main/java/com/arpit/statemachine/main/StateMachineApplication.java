@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.statemachine.StateMachine;
 
-
 @SpringBootApplication
 @ComponentScan({"com.arpit.statemachine"})
 public class StateMachineApplication implements CommandLineRunner {
@@ -20,8 +19,8 @@ public class StateMachineApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        stateMachine.getStateMachineAccessor().withRegion().addStateMachineInterceptor(new StateInterceptor());
         stateMachine.sendEvent(Events.ORDERED);
+
        /* System.out.println("############################################1111111111111111111111111");
         stateMachine.sendEvent(Events.ORDERED);
         System.out.println("############################################");

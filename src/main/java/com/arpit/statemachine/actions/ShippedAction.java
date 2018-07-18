@@ -12,11 +12,14 @@ public class ShippedAction implements Action<States, Events> {
 
     @Override
     public void execute(StateContext<States, Events> context) {
-
-      /*  String str=null;
-        str.equals("hello");
-*/
         System.out.println("Shipped Action called....");
+
+            // set error in state machine to be captured by Interceptor.
+           //  context.getStateMachine().setStateMachineError(e);
+
+        /*String str = null;
+        str.equals("abc");
+*/
         if (context.getMessage().getHeaders() != null) {
             Order order = (Order) context.getMessage().getHeaders().get("order");
             System.out.println("Order id to be shipped :: " + order.getId());

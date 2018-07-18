@@ -8,16 +8,12 @@ import com.arpit.statemachine.states.States;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.statemachine.StateContext;
-import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.EnumStateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineTransitionConfigurer;
-import org.springframework.statemachine.listener.StateMachineListener;
-import org.springframework.statemachine.listener.StateMachineListenerAdapter;
-import org.springframework.statemachine.state.State;
 
 @Configuration
 @EnableStateMachine
@@ -29,8 +25,8 @@ public class StateMachineConfig
             throws Exception {
         config
                 .withConfiguration()
-                .autoStartup(true)
-                .listener(listener());
+                .autoStartup(true);
+                //.listener(listener());
     }
 
     @Override
@@ -65,7 +61,7 @@ public class StateMachineConfig
                 .initial(States.IDLE)
                 .state(States.ORDERED, orderedAction())
                 .state(States.SHIPPED, shippedAction())
-                .state(States.DELIVERED, deliveredAction());
+                .state(States.DELIVERED, deliveredAction()).end(States.END);
     }
 
     @Override
@@ -80,6 +76,9 @@ public class StateMachineConfig
                 .and()
                 .withExternal()
                 .source(States.SHIPPED).target(States.DELIVERED).event(Events.DELIVERED)
+                .and()
+                .withExternal()
+                .source(States.DELIVERED).target(States.END)
         ;
     }
 
@@ -87,7 +86,10 @@ public class StateMachineConfig
     public Action<States, Events> orderedAction() {
         return new OrderedAction();
     }
-
+    @Bean
+    public Action<States, Events> orderedErrorAction() {
+        return new OrderedAction();
+    }
     @Bean
     public Action<States, Events> initialize() {
         return new Action<States, Events>() {
@@ -109,13 +111,7 @@ public class StateMachineConfig
         return new DeliveredAction();
     }
 
-    @Bean
-    public Action<States, Events> errorAction() {
-        return ctx -> System.out.println(
-                "Error " + ctx.getSource().getId() + ctx.getException());
-    }
-
-    @Bean
+    /*@Bean
     public StateMachineListener<States, Events> listener() {
         return new StateMachineListenerAdapter<States, Events>() {
             @Override
@@ -129,5 +125,5 @@ public class StateMachineConfig
             }
 
         };
-    }
+    }*/
 }

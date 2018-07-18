@@ -17,37 +17,36 @@ public class StateInterceptor extends StateMachineInterceptorAdapter<States, Eve
 
     @Override
     public Message<Events> preEvent(Message<Events> message, StateMachine<States, Events> stateMachine) {
-        System.out.println("Hello :: preEvent" );
         return message;
     }
 
     @Override
     public void preStateChange(State<States, Events> state, Message<Events> message, Transition<States, Events> transition,
                                StateMachine<States, Events> stateMachine) {
-        System.out.println("Hello :: preStateChange" );
     }
 
     @Override
     public void postStateChange(State<States, Events> state, Message<Events> message, Transition<States, Events> transition,
                                 StateMachine<States, Events> stateMachine) {
-        System.out.println("Hello :: postStateChange" );
     }
 
     @Override
     public StateContext<States, Events> preTransition(StateContext<States, Events> stateContext) {
-        System.out.println("Hello :: preTransition" );
         return stateContext;
-    }
 
+    }
     @Override
     public StateContext<States, Events> postTransition(StateContext<States, Events> stateContext) {
-        System.out.println("Hello :: postTransition" );
+        State currentState = stateContext.getStateMachine().getState();
+        System.out.println("Current State is :: "+ currentState.getId());
         return stateContext;
     }
 
     @Override
     public Exception stateMachineError(StateMachine<States, Events> stateMachine, Exception exception) {
-        System.out.println("Hello :: stateMachineError" );
+        State currentState = stateMachine.getState();
+        System.out.println("Failed State is :: "+ currentState.getId());
+        stateMachine.stop();
         return exception;
     }
 
