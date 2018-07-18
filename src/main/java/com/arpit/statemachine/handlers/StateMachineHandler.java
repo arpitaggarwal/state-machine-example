@@ -37,7 +37,7 @@ public class StateMachineHandler extends LifecycleObjectSupport {
         stateMachine.stop();
         stateMachine
                 .getStateMachineAccessor()
-                .doWithAllRegions(access -> access.resetStateMa-chine(new DefaultStateMachineContext<States, Events>(sourceState, null, null, null)));
+                .doWithAllRegions(access -> access.resetStateMa-chine(new DefaultStateMachineContext<States, Event>(sourceState, null, null, null)));
         stateMachine.start();
         stateMachine.sendEvent(event);
     }*/

@@ -22,12 +22,12 @@ public class StateMachineApplication implements CommandLineRunner {
         stateMachine.sendEvent(Events.ORDERED);
 
        /* System.out.println("############################################1111111111111111111111111");
-        stateMachine.sendEvent(Events.ORDERED);
+        stateMachine.sendEvent(Event.ORDERED);
         System.out.println("############################################");
-        stateMachine.sendEvent(Events.SHIPPED);*/
+        stateMachine.sendEvent(Event.SHIPPED);*/
        /*
 
-        stateMachine.sendEvent(Events.E1);*/
+        stateMachine.sendEvent(Event.E1);*/
     }
 
     public static void main(String[] args) {

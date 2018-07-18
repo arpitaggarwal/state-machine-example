@@ -1,42 +1,40 @@
 package com.arpit.state.design.pattern.transition;
 
-import java.util.Set;
-
-import com.arpit.state.design.pattern.condition.Condition;
+import com.arpit.state.design.pattern.events.Event;
 import com.arpit.state.design.pattern.states.State;
 
 public class Transition {
-	private State from;
-	private Set<Condition> conditions;
-	private State to;
+    private State from;
+    private Event event;
+    private State to;
 
-	public Transition(State from, State to, Set<Condition> conditions) {
-		this.from = from;
-		this.to = to;
-		this.conditions = conditions;
-	}
+    public Transition(State from, State to, Event event) {
+        this.from = from;
+        this.to = to;
+        this.event = event;
+    }
 
-	public State getFrom() {
-		return from;
-	}
+    public State getFrom() {
+        return from;
+    }
 
-	public void setFrom(State from) {
-		this.from = from;
-	}
+    public void setFrom(State from) {
+        this.from = from;
+    }
 
-	public Set<Condition> getConditions() {
-		return conditions;
-	}
+    public Event getEvent() {
+        return event;
+    }
 
-	public void setConditions(Set<Condition> conditions) {
-		this.conditions = conditions;
-	}
+    public void setEvent(Event event) {
+        this.event = event;
+    }
 
-	public State getTo() {
-		return to;
-	}
+    public State getTo() {
+        return to;
+    }
 
-	public void setTo(State to) {
-		this.to = to;
-	}
+    public void setTo(State to) {
+        this.to = to;
+    }
 }

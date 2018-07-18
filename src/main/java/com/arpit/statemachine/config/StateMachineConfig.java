@@ -112,15 +112,15 @@ public class StateMachineConfig
     }
 
     /*@Bean
-    public StateMachineListener<States, Events> listener() {
-        return new StateMachineListenerAdapter<States, Events>() {
+    public StateMachineListener<States, Event> listener() {
+        return new StateMachineListenerAdapter<States, Event>() {
             @Override
-            public void stateChanged(State<States, Events> from, State<States, Events> to) {
+            public void stateChanged(State<States, Event> from, State<States, Event> to) {
                 System.out.println("State change to " + to.getId());
             }
 
             @Override
-            public void stateMachineError(StateMachine<States, Events> stateMachine, Exception exception) {
+            public void stateMachineError(StateMachine<States, Event> stateMachine, Exception exception) {
                 System.out.println("State Machine Error");
             }
 
